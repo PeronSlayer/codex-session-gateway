@@ -19,7 +19,8 @@ body:
     id: reproduction
     attributes:
       label: Minimal sanitized reproduction
-      description: List commands and observed behavior using public or synthetic data.
+      description:
+        List commands and observed behavior using public or synthetic data.
     validations:
       required: true
   - type: textarea
@@ -33,5 +34,6 @@ body:
     attributes:
       label: Report review
       options:
-        - label: This report contains no secrets or private vulnerability details.
+        - label:
+            This report contains no secrets or private vulnerability details.
           required: true

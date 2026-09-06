@@ -3,10 +3,13 @@ import { lstatSync, readFileSync, realpathSync } from 'node:fs';
 import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const root = realpathSync(resolve(dirname(fileURLToPath(import.meta.url)), '..'));
+const root = realpathSync(
+  resolve(dirname(fileURLToPath(import.meta.url)), '..'),
+);
 const git = (...args) => execFileSync('git', ['-C', root, ...args]);
 const failures = new Set();
-const report = (path, reason) => failures.add(`${JSON.stringify(path)}: ${reason}`);
+const report = (path, reason) =>
+  failures.add(`${JSON.stringify(path)}: ${reason}`);
 const paths = new Set(
   git('ls-files', '--cached', '--others', '--exclude-standard', '-z')
     .toString('utf8')
@@ -28,11 +31,17 @@ function forbidden(path) {
 
 const patterns = [
   ['private key', /-----BEGIN (?:[A-Z0-9]+ )*PRIVATE KEY-----/],
-  ['GitHub credential', /\b(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})\b/],
+  [
+    'GitHub credential',
+    /\b(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})\b/,
+  ],
   ['cloud access key', /\b(?:AKIA|ASIA)[A-Z0-9]{16}\b/],
   ['API credential', /\bsk-(?:proj-|ant-)?[A-Za-z0-9_-]{20,}\b/],
   ['Slack credential', /\bxox[baprs]-[A-Za-z0-9-]{16,}\b/],
-  ['JWT-like credential', /\beyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\b/],
+  [
+    'JWT-like credential',
+    /\beyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\b/,
+  ],
   ['authorization value', /\b(?:Bearer|Basic)\s+[A-Za-z0-9_+/.=-]{16,}/i],
   ['URL credentials', /\b[a-z][a-z0-9+.-]*:\/\/[^\s/@:]+:[^\s/@]+@/i],
 ];
@@ -50,7 +59,9 @@ function inspect(path, bytes, source) {
     /\b(?:api[_-]?key|access[_-]?token|refresh[_-]?token|agent[_-]?token|client[_-]?secret|password)\b["']?\s*[:=]\s*["']?([^\s"',;#}]+)/gi,
   );
   for (const match of assignments) {
-    if (!/^(?:FAKE_TOKEN_FOR_EXAMPLE_ONLY|PLACEHOLDER|CHANGE_ME)$/i.test(match[1])) {
+    if (
+      !/^(?:FAKE_TOKEN_FOR_EXAMPLE_ONLY|PLACEHOLDER|CHANGE_ME)$/i.test(match[1])
+    ) {
       report(path, `${source}: possible credential assignment`);
     }
   }
@@ -111,9 +122,15 @@ for (const entry of entries) {
 
 if (failures.size) {
   for (const failure of failures) console.error(failure);
-  console.error('Preventive secret check failed. Matched values are never printed.');
+  console.error(
+    'Preventive secret check failed. Matched values are never printed.',
+  );
   process.exitCode = 1;
 } else {
-  console.log(`Preventive secret check passed for ${paths.size} Git candidates and the index.`);
-  console.log('Heuristic only: manually review the staged diff before committing.');
+  console.log(
+    `Preventive secret check passed for ${paths.size} Git candidates and the index.`,
+  );
+  console.log(
+    'Heuristic only: manually review the staged diff before committing.',
+  );
 }

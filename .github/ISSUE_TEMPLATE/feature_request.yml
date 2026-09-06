@@ -26,4 +26,6 @@ body:
     id: security
     attributes:
       label: Security and alternatives
-      description: Discuss design implications without disclosing vulnerabilities or secrets.
+      description:
+        Discuss design implications without disclosing vulnerabilities or
+        secrets.

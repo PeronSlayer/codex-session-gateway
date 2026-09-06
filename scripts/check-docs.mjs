@@ -3,7 +3,9 @@ import { lstatSync, readFileSync, realpathSync } from 'node:fs';
 import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const root = realpathSync(resolve(dirname(fileURLToPath(import.meta.url)), '..'));
+const root = realpathSync(
+  resolve(dirname(fileURLToPath(import.meta.url)), '..'),
+);
 const required = [
   'README.md',
   'ROADMAP.md',
@@ -42,9 +44,18 @@ const required = [
   ].map((name) => `docs/${name}.md`),
 ];
 const failures = new Set();
-const fail = (path, reason) => failures.add(`${JSON.stringify(path)}: ${reason}`);
+const fail = (path, reason) =>
+  failures.add(`${JSON.stringify(path)}: ${reason}`);
 const paths = new Set(
-  execFileSync('git', ['-C', root, 'ls-files', '--cached', '--others', '--exclude-standard', '-z'])
+  execFileSync('git', [
+    '-C',
+    root,
+    'ls-files',
+    '--cached',
+    '--others',
+    '--exclude-standard',
+    '-z',
+  ])
     .toString('utf8')
     .split('\0')
     .filter((path) => path.endsWith('.md')),
@@ -95,20 +106,29 @@ for (const path of paths) {
   if (!content.trim()) fail(path, 'empty documentation');
   if (
     path.startsWith('docs/') &&
-    !/\*\*Status: (Implemented|Experimental|Planned|Not supported)\*\*/.test(content)
+    !/\*\*Status: (Implemented|Experimental|Planned|Not supported)\*\*/.test(
+      content,
+    )
   ) {
     fail(path, 'missing explicit feature status');
   }
   const prose = content.replace(/^```[^\n]*\n[\s\S]*?^```\s*$/gm, '');
   const links = [
-    ...Array.from(prose.matchAll(/!?\[[^\]\n]*\]\(([^)\n]+)\)/g), (match) => match[1]),
-    ...Array.from(prose.matchAll(/^\s*\[[^\]]+\]:\s*(\S+)/gm), (match) => match[1]),
+    ...Array.from(
+      prose.matchAll(/!?\[[^\]\n]*\]\(([^)\n]+)\)/g),
+      (match) => match[1],
+    ),
+    ...Array.from(
+      prose.matchAll(/^\s*\[[^\]]+\]:\s*(\S+)/gm),
+      (match) => match[1],
+    ),
   ];
   for (const raw of links) {
     const target = raw.startsWith('<')
       ? raw.slice(1, raw.indexOf('>'))
       : raw.split(/\s+["']/)[0];
-    if (/^[a-z][a-z0-9+.-]*:/i.test(target) || target.startsWith('//')) continue;
+    if (/^[a-z][a-z0-9+.-]*:/i.test(target) || target.startsWith('//'))
+      continue;
     try {
       const [file, hash] = target.split('#', 2);
       const absolute = checkedPath(
@@ -117,10 +137,14 @@ for (const path of paths) {
           : resolve(root, path),
       );
       const stat = lstatSync(absolute);
-      if (!stat.isFile() && !stat.isDirectory()) throw new Error('not a regular target');
+      if (!stat.isFile() && !stat.isDirectory())
+        throw new Error('not a regular target');
       if (
         hash &&
-        (!stat.isFile() || !anchors(readFileSync(absolute, 'utf8')).has(decodeURIComponent(hash)))
+        (!stat.isFile() ||
+          !anchors(readFileSync(absolute, 'utf8')).has(
+            decodeURIComponent(hash),
+          ))
       ) {
         throw new Error('missing local anchor');
       }
@@ -134,5 +158,7 @@ if (failures.size) {
   for (const failure of failures) console.error(failure);
   process.exitCode = 1;
 } else {
-  console.log(`Documentation check passed for ${paths.size} Markdown files (external URLs not checked).`);
+  console.log(
+    `Documentation check passed for ${paths.size} Markdown files (external URLs not checked).`,
+  );
 }

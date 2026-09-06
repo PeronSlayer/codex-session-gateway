@@ -2,6 +2,9 @@ packages:
   - apps/*
   - packages/*
 
-# Permit only the build helper used by Vitest/Vite; review additions explicitly.
-onlyBuiltDependencies:
-  - esbuild
+engineStrict: true
+packageManagerStrictVersion: true
+strictDepBuilds: true
+
+# No resolved dependency needs lifecycle scripts. Review future additions explicitly.
+onlyBuiltDependencies: []
