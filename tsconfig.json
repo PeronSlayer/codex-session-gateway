@@ -1,0 +1,23 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "apps/gateway"
+    },
+    {
+      "path": "apps/node-agent"
+    },
+    {
+      "path": "packages/protocol"
+    },
+    {
+      "path": "packages/codex-client"
+    },
+    {
+      "path": "packages/security"
+    },
+    {
+      "path": "packages/shared"
+    }
+  ]
+}

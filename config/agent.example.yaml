@@ -1,0 +1,7 @@
+# Status: Planned. Illustrative fields only; no parser or stable schema exists.
+host_id: 00000000-0000-4000-8000-000000000001
+gateway_url: wss://gateway.example.com
+credential_reference: /path/to/private/agent-credential
+workspaces:
+  - id: 00000000-0000-4000-8000-000000000002
+    path: /path/to/workspace

@@ -1,0 +1,37 @@
+name: Bug report
+description: Report a reproducible scaffold or implemented-feature defect.
+title: 'bug: '
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Early development: runtime integrations are Planned.
+        Do not disclose vulnerabilities, secrets or private transcripts here.
+        Follow SECURITY.md for private reporting.
+  - type: input
+    id: revision
+    attributes:
+      label: Revision and tool versions
+      description: Commit, Node version and pnpm version; no environment dumps.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal sanitized reproduction
+      description: List commands and observed behavior using public or synthetic data.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Report review
+      options:
+        - label: This report contains no secrets or private vulnerability details.
+          required: true

@@ -1,0 +1,7 @@
+packages:
+  - apps/*
+  - packages/*
+
+# Permit only the build helper used by Vitest/Vite; review additions explicitly.
+onlyBuiltDependencies:
+  - esbuild

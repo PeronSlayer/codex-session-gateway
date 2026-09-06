@@ -1,0 +1,29 @@
+name: Feature request
+description: Propose scoped work against the roadmap.
+title: 'proposal: '
+body:
+  - type: input
+    id: roadmap
+    attributes:
+      label: Related roadmap identifier
+      description: For example M1.2, or explain why a new item is needed.
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem and intended users
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior and acceptance criteria
+      description: Distinguish Planned behavior from what is Implemented today.
+    validations:
+      required: true
+  - type: textarea
+    id: security
+    attributes:
+      label: Security and alternatives
+      description: Discuss design implications without disclosing vulnerabilities or secrets.

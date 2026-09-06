@@ -1,0 +1,4 @@
+# Status: Planned. Illustrative fields only; no parser or stable schema exists.
+public_url: https://gateway.example.com
+agent_transport_url: wss://gateway.example.com
+# Authentication design must be reviewed before configuration is finalized.
